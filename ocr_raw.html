@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OCR with Tesseract.js</title>
+    <style>
+        #output {
+            width: 300px;
+            height: 200px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="imageUpload" />
+    <button onclick="runOCR()">Run OCR</button>
+    <div id="output"></div>
+
+    <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
+    <script>
+        function runOCR() {
+            const imageUpload = document.getElementById('imageUpload');
+            const output = document.getElementById('output');
+            let file = imageUpload.files[0];
+            let reader = new FileReader();
+
+            reader.onload = function(event) {
+                Tesseract.recognize(event.target.result)
+                    .then(function(result) {
+                        output.innerHTML = result.text;
+                    });
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

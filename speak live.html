@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Live Speech-to-Text | Coding</title>
+  <style>
+    /* Your CSS goes here */
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+  <div class="container">
+    <button id="listen-button">Listen</button>
+    <div id="live-text"></div>
+  </div>
+  <script>
+    // Get the text area, listen button, and live text div
+    let textArea = document.getElementById("text");
+    let listenButton = document.getElementById("listen-button");
+    let liveTextDiv = document.getElementById("live-text");
+
+    // Add an event listener to the listen button
+    listenButton.addEventListener("click", function() {
+      // Create a new SpeechRecognition object
+      let recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+
+      // Set properties for continuous recognition and interim results
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      // Start recognition
+      recognition.start();
+
+      // Event listener for result event
+      recognition.onresult = function(event) {
+        let interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+        // Display the recognized text in the liveTextDiv
+        liveTextDiv.innerText = "Live Text: " + interimTranscript;
+      };
+
+      // Event listener for end event
+      recognition.onend = function() {
+        // Stop recognition
+        recognition.stop();
+      };
+    });
+  </script>
+</body>
+</html>
